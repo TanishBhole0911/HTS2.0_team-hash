@@ -7,17 +7,13 @@ import { useSelector } from "react-redux";
 export default function App() {
   // Use useSelector to get values from Redux store
   const cachedUsername = useSelector((state: any) => state.user.user.username);
+  const cachedProjectTitle = useSelector(
+    (state: any) => state.user.projectTitle
+  );
   const projects = useSelector((state: any) => state.user.user.projects);
 
-  // Log the projects to check their structure
-  console.log("Projects from Redux store:", projects);
-
   // Access the project directly from the object
-  const cachedProjectTitle = "TestProject";
   const cachedProject = projects[cachedProjectTitle];
-
-  // Log the cached project to check its structure
-  console.log("Cached Project:", cachedProject);
 
   // Initialize state without default values
   const [editorContent, setEditorContent] = useState<string>("");
@@ -28,11 +24,15 @@ export default function App() {
     if (!cachedUsername) {
       console.error("Username is missing in the Redux store");
     }
+    // Ensure project title is available
+    if (!cachedProjectTitle) {
+      console.error("Project title is missing in the Redux store");
+    }
     // Ensure project is available
     if (!cachedProject) {
       console.error("Project is missing in the Redux store");
     }
-  }, [cachedUsername, cachedProject]);
+  }, [cachedUsername, cachedProjectTitle, cachedProject]);
 
   const handleEditorChange = (content: string) => {
     setEditorContent(content);
@@ -42,9 +42,6 @@ export default function App() {
     event.preventDefault();
     const turndownService = new TurndownService();
     const markdownContent = turndownService.turndown(editorContent);
-
-    console.log("HTML Content:", editorContent);
-    console.log("Markdown Content:", markdownContent);
 
     try {
       if (!cachedProject) {
@@ -66,8 +63,6 @@ export default function App() {
         ],
       };
 
-      console.log("Note Save Request:", noteSaveRequest);
-
       const saveResponse = await fetch(
         "http://localhost:8000/notes/save_note",
         {
@@ -81,7 +76,6 @@ export default function App() {
       if (!saveResponse.ok) {
         throw new Error(`Failed to save content: ${saveResponse.statusText}`);
       }
-      console.log("Content saved successfully");
     } catch (error) {
       console.error("Error:", error);
     }
