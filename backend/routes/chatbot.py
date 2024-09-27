@@ -53,7 +53,7 @@ async def chat(request: ChatRequest) -> Dict[str, Any]:
         for entry in conversation["conversation"]
     )
     prompt = f"{conversation_history}\nAI:"
-    print(prompt)
+    # print(prompt)
     chat_completion = client.chat.completions.create(
         messages=[
             {
