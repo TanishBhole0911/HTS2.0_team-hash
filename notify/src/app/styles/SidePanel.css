@@ -1,0 +1,56 @@
+.side-panel {
+  flex: 0 0 28%;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.flashcards-section {
+  margin-top: 20px;
+}
+
+.flashcard-item {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.flashcard-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.side-panel.open {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.side-panel.closed {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
+.flashcard-item {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.1em;
+  text-align: center;
+}
