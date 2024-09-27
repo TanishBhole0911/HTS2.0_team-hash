@@ -59,6 +59,11 @@ def generate_flashcards(text: str) -> List[Dict[str, str]]:
         # print("----")
         try:
             flashcards = json.loads(cleaned_result)
+            # print(flashcards)
+            if not flashcards[0]["question"]:
+                raise json.JSONDecodeError(
+                    "Expecting value", "line 1 column 1 (char 0)", 0
+                )
             return flashcards  # Return if valid JSON
         except json.JSONDecodeError:
             print(f"Attempt {attempt + 1} failed: Invalid JSON content")
