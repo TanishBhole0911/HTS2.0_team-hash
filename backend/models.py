@@ -7,6 +7,7 @@ class UserLogin(BaseModel):
     username: str
     password: str
 
+
 # Pydantic model for user registration
 class User(BaseModel):
     username: str
@@ -25,3 +26,9 @@ class NoteSaveRequest(BaseModel):
     username: str
     note_title: str
     pages: List[NotePage]  # List of pages to be saved
+
+
+class MindmapRequest(BaseModel):
+    username: str
+    note_title: str
+    refresh: Optional[bool] = False
