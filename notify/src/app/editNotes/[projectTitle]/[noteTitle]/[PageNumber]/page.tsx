@@ -116,7 +116,7 @@ export default function EditNotes() {
 					</label>
 				</div>
 				<Editor
-					apiKey="ydnb0b1pgkxfx9x7tyvm51ji8qqs1fqmny2r8gjpjj40hoj3"
+					apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
 					key={editorContent} // Add key prop to force re-render
 					onInit={(_evt, editor) => editorRef.current = editor}
 					init={{

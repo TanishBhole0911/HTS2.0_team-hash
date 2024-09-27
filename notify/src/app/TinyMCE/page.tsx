@@ -64,7 +64,7 @@ export default function App() {
       };
 
       const saveResponse = await fetch(
-        "http://localhost:8000/notes/save_note",
+        `${process.env.NEXT_PUBLIC_API_URL}/notes/save_note`,
         {
           method: "POST",
           headers: {
