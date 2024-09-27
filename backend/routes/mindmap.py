@@ -126,7 +126,12 @@ async def create_mindmap(request: MindmapRequest) -> Dict[str, Any]:
             "project_title": request.project_title,
             "mindmap": gojs_mindmap,
         }
-        await mindmap_collection.insert_one(mindmap_data)
+        # Update the mindmap in the mindmap_collection in the database
+        await mindmap_collection.update_one(
+            {"username": request.username, "project_title": request.project_title},
+            {"$set": mindmap_data},
+            upsert=True,
+        )
 
         return {
             "message": "Mindmap created successfully and uploaded to DB",
