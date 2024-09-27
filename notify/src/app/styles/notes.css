@@ -1,0 +1,166 @@
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #ffffff;
+  margin: 0;
+  padding: 0;
+  color: #000;
+}
+
+.notes-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.top-section {
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.notes-content {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.notes-content.panel-closed .notes-main {
+  flex: 1;
+}
+
+.notes-content.panel-open .notes-main {
+  flex: 0 0 72%;
+}
+.search-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  width: 50%;
+  margin-left: 25%;
+}
+
+.notes-main {
+  padding: 20px;
+  margin-top: 3%;
+  background-color: white;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #f4f5f7;
+  animation: fadeIn 1s ease-in-out;
+  margin-left: 1%;
+  width: 50%;
+}
+
+.notes-main h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+}
+
+.note-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.note-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.toggle-button:hover {
+  background-color: #0056b3;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.notes-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+}
+
+.notes-content.panel-closed .notes-main {
+  flex: 1;
+}
+
+.notes-content.panel-open .notes-main {
+  flex: 0 0 72%;
+}
+.notes-page {
+  display: flex;
+  flex-direction: row;
+}
+
+.notes-panel {
+  width: 7%;
+  align-items: center;
+  background-color: #ffffff;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-right: 1px solid #ddd;
+}
+.notes-panel-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f4f4f4;
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  gap: 10px;
+}
+.notes-panel-content{
+  display: flex;
+  flex-direction: column;
+  margin-top:20%;
+  height: 100%;
+  overflow-y: auto;
+}
+.note-item-container{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.note-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  gap: 10px;
+}
+.note-item-container{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

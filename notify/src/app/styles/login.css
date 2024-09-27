@@ -27,7 +27,7 @@
 }
 
 .login-title {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   font-size: 2.5rem;
   margin-bottom: 1rem;
@@ -79,7 +79,7 @@
 
 .login-button,
 .redirect-button {
-  color: #007bff;
+  color: #007BFF;
   /* Changed button text color to blue */
   background: none;
   /* Removed background color */
@@ -96,7 +96,7 @@
 }
 
 .login-button {
-  background-color: #007bff;
+  background-color: #007BFF;
   /* Added background color */
   color: #ffffff;
   /* Changed text color to white */
