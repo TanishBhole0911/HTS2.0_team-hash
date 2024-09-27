@@ -28,14 +28,17 @@ def process_text(text: str) -> str:
 
 def generate_mindmap(text: str) -> str:
     example = """{  "nodes": [    {      "id": "Qalaherriaq",      "type": "person",      "name": "Qalaherriaq"    },    {      "id": "Erasmus-Augustine-Kallihirua",      "type": "name",      "name": "Erasmus Augustine Kallihirua"    },    {      "id": "HMS-Assistance",      "type": "vehicle",      "name": "HMS Assistance"    },    {      "id": "Franklin's-Expedition",      "type": "event",      "name": "Franklin's lost expedition"    },    {      "id": "Wolstenholme-Fjord",      "type": "location",      "name": "Wolstenholme Fjord"    },    {      "id": "Society-for-Promoting-Christian-Knowledge",      "type": "organization",      "name": "Society for Promoting Christian Knowledge"    },    {      "id": "St-Augustine's-College",      "type": "school",      "name": "St Augustine's College"    },    {      "id": "Edward-Feild",      "type": "person",      "name": "Edward Feild"    },    {      "id": "Labrador-Inuit",      "type": "group",      "name": "Labrador Inuit"    },    {      "id": "St-John's",      "type": "location",      "name": "St. John's"    }  ],  "edges": [    {      "from": "Qalaherriaq",      "to": "Erasmus-Augustine-Kallihirua",      "label": "Name"    },    {      "from": "Qalaherriaq",      "to": "HMS-Assistance",      "label": "Taken aboard"    },    {      "from": "HMS-Assistance",      "to": "Franklin's-Expedition",      "label": "Search for"    },    {      "from": "HMS-Assistance",      "to": "Wolstenholme-Fjord",      "label": "Rumors of massacre"    },    {      "from": "Qalaherriaq",      "to": "Society-for-Promoting-Christian-Knowledge",      "label": "Custody"    },    {      "from": "Qalaherriaq",      "to": "St-Augustine's-College",      "label": "Studied"    },    {      "from": "Qalaherriaq",      "to": "Edward-Feild",      "label": "Tasked by"    },    {      "from": "Qalaherriaq",      "to": "Labrador-Inuit",      "label": "Mission"    },    {      "from": "Qalaherriaq",      "to": "St-John's",      "label": "Died"    }  ]}"""
-    prompt = f"Generate a hierarchical structure for the following text as a JSON object with 'nodes' and 'edges' example: {example} generate for following: {text}"
+    prompt = f"Generate a hierarchical structure for the following text as a JSON object with 'nodes' and 'edges' example: {example} generate for following: {text}."
 
     max_attempts = 3
     for attempt in range(max_attempts):
         try:
             chat_completion = client.chat.completions.create(
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
+                    {
+                        "role": "system",
+                        "content": "You are a helpful assistant. Your only job is to generate a hierarchical structure for the given text.",
+                    },
                     {"role": "user", "content": prompt},
                 ],
                 model="llama3-8b-8192",
@@ -109,6 +112,10 @@ async def create_mindmap(request: MindmapRequest) -> Dict[str, Any]:
         # print(note)
         if not note:
             raise HTTPException(status_code=404, detail="Note not found")
+
+        # Check if the project has any notes
+        if note.get("pages") == []:
+            raise HTTPException(status_code=404, detail="No notes found in the project")
 
         # Concatenate all page contents
         content = " ".join(page["content"] for page in note.get("pages", []))
