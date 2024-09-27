@@ -32,3 +32,13 @@ class MindmapRequest(BaseModel):
     username: str
     note_title: str
     refresh: Optional[bool] = False
+
+
+class Note(BaseModel):
+    content: str
+
+
+class PageContentRequest(BaseModel):
+    username: str
+    note_title: str
+    page_number: int
