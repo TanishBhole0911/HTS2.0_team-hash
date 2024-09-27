@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 app.include_router(login_router, prefix="/login", tags=["Login"])
-
+app.include_router(register_router, prefix="/register", tags=["Register"])
 
 # Define a basic GET endpoint
 @app.get("/")
