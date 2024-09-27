@@ -18,7 +18,7 @@ export default function App() {
   // Initialize state without default values
   const [editorContent, setEditorContent] = useState<string>("");
   const [noteTitle, setNoteTitle] = useState<string>("");
-
+  const [updatedNote, setUpdatedNote] = useState<string>("");
   useEffect(() => {
     // Ensure username is available
     if (!cachedUsername) {
@@ -35,13 +35,13 @@ export default function App() {
   }, [cachedUsername, cachedProjectTitle, cachedProject]);
 
   const handleEditorChange = (content: string) => {
-    setEditorContent(content);
+    setUpdatedNote(content);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const turndownService = new TurndownService();
-    const markdownContent = turndownService.turndown(editorContent);
+    const markdownContent = turndownService.turndown(updatedNote);
 
     try {
       if (!cachedProject) {
