@@ -1,0 +1,119 @@
+/* flashCard.css */
+.flash-card {
+  width: 200px;
+  height: 200px; /* Make the card square */
+  perspective: 1000px;
+  cursor: pointer;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.6s, box-shadow 0.3s;
+}
+
+.flash-card:hover {
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05);
+}
+
+.flash-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  border-radius: 15px;
+  background-color: transparent; /* Set background to transparent */
+}
+
+.flash-card-front,
+.flash-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* Ensure space between elements */
+  font-size: 1.5em;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 15px;
+}
+
+.flash-card-front {
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  color: #000;
+  border: 1px solid #ddd;
+}
+
+.flash-card-back {
+  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+  color: #fff;
+  transform: rotateY(180deg);
+  border: 1px solid #ddd;
+}
+
+.flashcard-container {
+  display: flex;
+  gap: 20px; /* Space between the cards */
+  justify-content: center; /* Center the cards horizontally */
+  align-items: center; /* Center the cards vertically */
+  margin-top: 20px; /* Space above the cards */
+  padding: 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.flashcard-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.answer-textarea {
+  width: 90%; /* Make the text area fit within the card */
+  height: 40px; /* Set a fixed height for the text area */
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1em;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  resize: none; /* Disable resizing */
+  margin-top: 10px; /* Add some space above the text area */
+  background-color: #fff; /* White background for better readability */
+  color: #333; /* Dark text color for better readability */
+  overflow: hidden; /* Remove scrollbar */
+}
+
+.toggle-mode-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.score-display {
+  margin-top: 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+}
