@@ -7,6 +7,7 @@ from routes.notes import router as notes_router
 from routes.mindmap import router as mindmap_router
 from routes.get_user import router as get_user_router
 from routes.get_notes import router as get_notes_router
+from routes.flash_cards import router as flash_cards_router
 
 app = FastAPI()
 
@@ -25,6 +26,7 @@ app.include_router(notes_router, prefix="/notes", tags=["Notes"])
 app.include_router(mindmap_router, prefix="/mindmap", tags=["Mindmap"])
 app.include_router(get_user_router, prefix="/get_user", tags=["Get User"])
 app.include_router(get_notes_router, prefix="/get_notes", tags=["Get Notes"])
+app.include_router(flash_cards_router, prefix="/flashcards", tags=["Flashcards"])
 
 
 # Define a basic GET endpoint

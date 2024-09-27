@@ -41,3 +41,8 @@ class Note(BaseModel):
 class PageContentRequest(BaseModel):
     username: str
     note_title: str
+
+
+class FlashcardRequest(BaseModel):
+    username: str
+    note_title: str
