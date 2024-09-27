@@ -6,3 +6,9 @@ from typing import List, Optional
 class UserLogin(BaseModel):
     username: str
     password: str
+
+# Pydantic model for user registration
+class User(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
