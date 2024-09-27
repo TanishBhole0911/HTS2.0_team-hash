@@ -17,20 +17,20 @@ class User(BaseModel):
 
 # Model for saving a note
 class NotePage(BaseModel):
-    title: str
+    note_title: str
     page_number: int
     content: str  # Markdown content of the page
 
 
 class NoteSaveRequest(BaseModel):
     username: str
-    note_title: str
+    project_title: str
     pages: List[NotePage]  # List of pages to be saved
 
 
 class MindmapRequest(BaseModel):
     username: str
-    note_title: str
+    project_title: str
     refresh: Optional[bool] = False
 
 
@@ -40,9 +40,9 @@ class Note(BaseModel):
 
 class PageContentRequest(BaseModel):
     username: str
-    note_title: str
+    project_title: str
 
 
 class FlashcardRequest(BaseModel):
     username: str
-    note_title: str
+    project_title: str

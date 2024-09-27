@@ -94,7 +94,7 @@ async def create_mindmap(request: MindmapRequest) -> Dict[str, Any]:
 
         # Check if mindmap already exists in the mindmap_collection
         existing_mindmap = await mindmap_collection.find_one(
-            {"username": request.username, "note_title": request.note_title}
+            {"username": request.username, "project_title": request.project_title}
         )
         if existing_mindmap and request.refresh == False:
             return {
@@ -104,7 +104,7 @@ async def create_mindmap(request: MindmapRequest) -> Dict[str, Any]:
 
         # Retrieve the note
         note = await note_collection.find_one(
-            {"username": request.username, "note_title": request.note_title}
+            {"username": request.username, "project_title": request.project_title}
         )
         # print(note)
         if not note:
@@ -123,7 +123,7 @@ async def create_mindmap(request: MindmapRequest) -> Dict[str, Any]:
         # Upload the mindmap to the mindmap_collection in the database
         mindmap_data = {
             "username": request.username,
-            "note_title": request.note_title,
+            "project_title": request.project_title,
             "mindmap": gojs_mindmap,
         }
         await mindmap_collection.insert_one(mindmap_data)

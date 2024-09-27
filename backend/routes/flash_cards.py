@@ -79,7 +79,7 @@ async def create_flashcards(request: FlashcardRequest) -> Dict[str, Any]:
 
         # Check if flashcards already exist in the flashcard_collection
         existing_flashcards = await flashcard_collection.find_one(
-            {"username": request.username, "note_title": request.note_title}
+            {"username": request.username, "project_title": request.project_title}
         )
         if existing_flashcards:
             return {
@@ -89,7 +89,7 @@ async def create_flashcards(request: FlashcardRequest) -> Dict[str, Any]:
 
         # Retrieve the note
         note = await note_collection.find_one(
-            {"username": request.username, "note_title": request.note_title}
+            {"username": request.username, "project_title": request.project_title}
         )
         if not note:
             raise HTTPException(status_code=404, detail="Note not found")
@@ -104,7 +104,7 @@ async def create_flashcards(request: FlashcardRequest) -> Dict[str, Any]:
         # Upload the flashcards to the flashcard_collection in the database
         flashcard_data = {
             "username": request.username,
-            "note_title": request.note_title,
+            "project_title": request.project_title,
             "flashcards": flashcards,
         }
         await flashcard_collection.insert_one(flashcard_data)

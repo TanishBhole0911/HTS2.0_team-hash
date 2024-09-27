@@ -19,8 +19,8 @@ async def get_user_info(username: str):
         # Extract project titles and file names
         projects = {}
         for note in notes:
-            project_title = note["note_title"]
-            file_names = [page["title"] for page in note.get("pages", [])]
+            project_title = note["project_title"]
+            file_names = [page["note_title"] for page in note.get("pages", [])]
             projects[project_title] = file_names
 
         return {"username": username, "projects": projects}

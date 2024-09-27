@@ -16,7 +16,7 @@ async def get_page_content(request: PageContentRequest):
 
         # Retrieve the note
         note = await note_collection.find_one(
-            {"username": request.username, "note_title": request.note_title}
+            {"username": request.username, "project_title": request.project_title}
         )
         if not note:
             raise HTTPException(status_code=404, detail="Note not found")

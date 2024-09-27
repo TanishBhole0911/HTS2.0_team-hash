@@ -15,8 +15,8 @@ async def save_note(note_request: NoteSaveRequest):
 
         # Check if note already exists, and append/update pages accordingly
         existing_note = await note_collection.find_one_and_update(
-            {"username": note_request.username, "note_title": note_request.note_title},
-            {"$setOnInsert": {"username": note_request.username, "note_title": note_request.note_title}},
+            {"username": note_request.username, "project_title": note_request.project_title},
+            {"$setOnInsert": {"username": note_request.username, "project_title": note_request.project_title}},
             upsert=True,
             return_document=ReturnDocument.AFTER
         )
@@ -38,7 +38,7 @@ async def save_note(note_request: NoteSaveRequest):
 
         # Save the updated note
         result = await note_collection.find_one_and_update(
-            {"username": note_request.username, "note_title": note_request.note_title},
+            {"username": note_request.username, "project_title": note_request.project_title},
             {"$set": {"pages": existing_note["pages"]}},
             return_document=ReturnDocument.AFTER
         )
