@@ -12,3 +12,16 @@ class User(BaseModel):
     username: str
     email: EmailStr
     password: str
+
+
+# Model for saving a note
+class NotePage(BaseModel):
+    title: str
+    page_number: int
+    content: str  # Markdown content of the page
+
+
+class NoteSaveRequest(BaseModel):
+    username: str
+    note_title: str
+    pages: List[NotePage]  # List of pages to be saved
