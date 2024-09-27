@@ -41,4 +41,3 @@ class Note(BaseModel):
 class PageContentRequest(BaseModel):
     username: str
     note_title: str
-    page_number: int

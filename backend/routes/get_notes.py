@@ -6,7 +6,7 @@ from pymongo import ReturnDocument
 router = APIRouter()
 
 
-@router.get("/")
+@router.post("/")
 async def get_page_content(request: PageContentRequest):
     try:
         # Check if user exists
@@ -21,12 +21,8 @@ async def get_page_content(request: PageContentRequest):
         if not note:
             raise HTTPException(status_code=404, detail="Note not found")
 
-        # Find the page content
-        for page in note.get("pages", []):
-            if page["page_number"] == request.page_number:
-                return {"content": page["content"]}
-
-        raise HTTPException(status_code=404, detail="Page not found")
+        # Return all pages
+        return {"pages": note.get("pages", [])}
 
     except Exception as e:
         print(f"\033[91m{e}\033[0m")
