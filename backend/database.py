@@ -11,3 +11,6 @@ user_collection = database.get_collection("users")
 note_collection = database.get_collection("notes")  # Collection name for notes
 mindmap_collection = database.get_collection("mindmap")  # Collection mindmap
 flashcard_collection = database.get_collection("flashcard")  # Collection flashcards
+conversation_collection = database.get_collection(
+    "conversation"
+)  # Collection conversation
