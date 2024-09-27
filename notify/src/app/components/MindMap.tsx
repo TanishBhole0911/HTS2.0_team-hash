@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as go from "gojs";
 import { ReactDiagram } from "gojs-react";
 import "../styles/MindMap.css"; // Import the specific CSS file for MindMap
@@ -22,6 +22,7 @@ interface MindMapProps {
 
 const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
   const diagramRef = useRef<go.Diagram | null>(null);
+  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     if (diagramRef.current) {
@@ -30,7 +31,7 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
         linkDataArray
       );
     }
-  }, [nodeDataArray, linkDataArray]);
+  }, [nodeDataArray, linkDataArray, refresh]);
 
   const initDiagram = (): go.Diagram => {
     const $ = go.GraphObject.make;
@@ -53,7 +54,7 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
         go.Shape,
         "RoundedRectangle",
         { strokeWidth: 0 },
-        new go.Binding("fill", "category", (cat) => {
+        new go.Binding("fill", "category", (cat: string) => {
           switch (cat) {
             case "event":
               return "#FFCC00";
@@ -92,12 +93,17 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
   return (
     <div className="mindmap-section">
       <h2>Mindmap</h2>
-      <ReactDiagram
-        initDiagram={initDiagram}
-        divClassName="diagram-component"
-        nodeDataArray={nodeDataArray}
-        linkDataArray={linkDataArray}
-      />
+      <button onClick={() => setRefresh(!refresh)}>Refresh</button>
+      {nodeDataArray.length > 0 ? (
+        <ReactDiagram
+          initDiagram={initDiagram}
+          divClassName="diagram-component"
+          nodeDataArray={nodeDataArray}
+          linkDataArray={linkDataArray}
+        />
+      ) : (
+        <p>No nodes to display</p>
+      )}
     </div>
   );
 };
