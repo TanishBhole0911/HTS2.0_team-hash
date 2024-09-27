@@ -1,0 +1,143 @@
+/* login.css */
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  /* Changed to transparent */
+  z-index: 100;
+  color: #333;
+  box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.1);
+  /* Changed text color for better readability */
+}
+
+.login-form {
+  background: #ffffff;
+  /* Changed background to white */
+  padding: 3rem; /* Increased padding */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* Adjusted shadow color for better contrast */
+  width: 400px;
+  border: 1px solid #ccc;
+  /* Changed border color for better visibility */
+  animation: fadeIn 1s ease-in-out;
+  overflow: hidden; /* Ensure the box-shadow respects the border-radius */
+}
+
+.login-title {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #333;
+  /* Changed text color for better readability */
+}
+
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  /* Changed text color for better readability */
+}
+
+.input-group input {
+  width: 100%;
+  padding: 1rem; /* Increased padding */
+  border: 1px solid #ccc;
+  /* Changed border color for better visibility */
+  border-radius: 4px;
+  background: #fff;
+  /* Changed background color to white */
+  color: #333;
+  /* Changed text color for better readability */
+}
+
+.password-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  flex: 1;
+}
+
+.toggle-password {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  color: #333;
+  /* Changed text color for better readability */
+}
+
+.login-button,
+.redirect-button {
+  color: #007bff;
+  /* Changed button text color to blue */
+  background: none;
+  /* Removed background color */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: color 0.3s ease;
+  padding: 15px 15px; /* Increased padding */
+  width: max-content;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.login-button {
+  background-color: #007bff;
+  /* Added background color */
+  color: #ffffff;
+  /* Changed text color to white */
+}
+
+.login-button:hover,
+.redirect-button:hover {
+  color: #0056b3;
+  /* Changed hover text color to a darker blue */
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.zoom-blur-animation {
+  animation: zoomBlur 2s infinite;
+}
+
+@keyframes zoomBlur {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
