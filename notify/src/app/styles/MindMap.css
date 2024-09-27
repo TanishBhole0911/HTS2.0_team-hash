@@ -1,0 +1,17 @@
+/* MindMap.css */
+
+.mindmap-section {
+  cursor: pointer;
+}
+
+.mindmap-section h2 {
+  margin: 0;
+  padding: 1rem;
+  background-color: #f4f5f7;
+  border-bottom: 1px solid #ccc;
+}
+
+.diagram-component {
+  width: 100%;
+  height: 400px;
+}

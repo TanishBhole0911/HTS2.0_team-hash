@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import * as go from "gojs";
 import { ReactDiagram } from "gojs-react";
 import "../styles/MindMap.css"; // Import the specific CSS file for MindMap
@@ -21,7 +21,6 @@ interface MindMapProps {
 }
 
 const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
   const diagramRef = useRef<go.Diagram | null>(null);
 
   useEffect(() => {
@@ -37,6 +36,11 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
     const $ = go.GraphObject.make;
     const diagram = $(go.Diagram, {
       "undoManager.isEnabled": true,
+      layout: $(go.LayeredDigraphLayout, {
+        direction: 90, // Layout direction (0: right, 90: down, 180: left, 270: up)
+        layerSpacing: 50, // Spacing between layers
+        columnSpacing: 30, // Spacing between columns
+      }),
       model: $(go.GraphLinksModel, {
         linkKeyProperty: "key",
       }),
@@ -85,45 +89,16 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
     return diagram;
   };
 
-  const handleExpand = () => {
-    setIsExpanded(true);
-    document.body.classList.add("blur-background");
-  };
-
-  const handleCollapse = () => {
-    setIsExpanded(false);
-    document.body.classList.remove("blur-background");
-  };
-
   return (
-    <>
-      <div className="mindmap-section" onClick={handleExpand}>
-        <h2>Mindmap</h2>
-        <ReactDiagram
-          initDiagram={initDiagram}
-          divClassName="diagram-component"
-          nodeDataArray={nodeDataArray}
-          linkDataArray={linkDataArray}
-          ref={diagramRef}
-        />
-      </div>
-      {isExpanded && (
-        <div className="overlay" onClick={handleCollapse}>
-          <div
-            className="expanded-mindmap"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ReactDiagram
-              initDiagram={initDiagram}
-              divClassName="diagram-component"
-              nodeDataArray={nodeDataArray}
-              linkDataArray={linkDataArray}
-              ref={diagramRef}
-            />
-          </div>
-        </div>
-      )}
-    </>
+    <div className="mindmap-section">
+      <h2>Mindmap</h2>
+      <ReactDiagram
+        initDiagram={initDiagram}
+        divClassName="diagram-component"
+        nodeDataArray={nodeDataArray}
+        linkDataArray={linkDataArray}
+      />
+    </div>
   );
 };
 
