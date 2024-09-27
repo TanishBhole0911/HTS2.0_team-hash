@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as go from "gojs";
 import { ReactDiagram } from "gojs-react";
 import "../styles/MindMap.css"; // Import the specific CSS file for MindMap
@@ -22,7 +22,6 @@ interface MindMapProps {
 
 const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
   const diagramRef = useRef<go.Diagram | null>(null);
-  const [refresh, setRefresh] = useState(false);
 
   useEffect(() => {
     if (diagramRef.current) {
@@ -31,7 +30,7 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
         linkDataArray
       );
     }
-  }, [nodeDataArray, linkDataArray, refresh]);
+  }, [nodeDataArray, linkDataArray]);
 
   const initDiagram = (): go.Diagram => {
     const $ = go.GraphObject.make;
@@ -53,8 +52,8 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
       $(
         go.Shape,
         "RoundedRectangle",
-        { strokeWidth: 0 },
-        new go.Binding("fill", "category", (cat: string) => {
+        { strokeWidth: 2, stroke: "black" }, // Add border with strokeWidth and stroke color
+        new go.Binding("fill", "category", (cat) => {
           switch (cat) {
             case "event":
               return "#FFCC00";
@@ -93,17 +92,12 @@ const MindMap: React.FC<MindMapProps> = ({ nodeDataArray, linkDataArray }) => {
   return (
     <div className="mindmap-section">
       <h2>Mindmap</h2>
-      <button onClick={() => setRefresh(!refresh)}>Refresh</button>
-      {nodeDataArray.length > 0 ? (
-        <ReactDiagram
-          initDiagram={initDiagram}
-          divClassName="diagram-component"
-          nodeDataArray={nodeDataArray}
-          linkDataArray={linkDataArray}
-        />
-      ) : (
-        <p>No nodes to display</p>
-      )}
+      <ReactDiagram
+        initDiagram={initDiagram}
+        divClassName="diagram-component"
+        nodeDataArray={nodeDataArray}
+        linkDataArray={linkDataArray}
+      />
     </div>
   );
 };

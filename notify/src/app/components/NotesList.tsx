@@ -10,15 +10,16 @@ interface Note {
 
 interface NotesListProps {
   notes: Note[];
+  selectedProject: string;
 }
-const NotesList: React.FC<NotesListProps> = ({ notes }) => {
+const NotesList: React.FC<NotesListProps> = ({ notes, selectedProject }) => {
   useEffect(() => {
     console.log(notes)
   }, [])
   return (
     <>
       {notes.map((note) => (
-        <NoteCard key={note.page_number} note={note} />
+        <NoteCard key={note.page_number} note={note} selectedProject={selectedProject} />
       ))}
     </>
   );
