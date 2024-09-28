@@ -295,19 +295,23 @@ function NotesPage() {
               />
             </Popover>
           </div>
-          {projectTitles.map((project, index) => (
-            <div key={index} className="note-item-container">
-              <div className="note-item">
-                <div className="note-title">
-                  <Tooltip title={project}>
-                    <IconButton onClick={() => setSelectedProject(project)}>
-                      <BookOutlined />
-                    </IconButton>
-                  </Tooltip>
+          {projectTitles.length === 0 ? (
+            <div>No projects, create one</div>
+          ) : (
+            projectTitles.map((project, index) => (
+              <div key={index} className="note-item-container">
+                <div className="note-item">
+                  <div className="note-title">
+                    <Tooltip title={project}>
+                      <IconButton onClick={() => setSelectedProject(project)}>
+                        <BookOutlined />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </div>
       <div className="notes-content">
@@ -332,20 +336,27 @@ function NotesPage() {
                 justifyContent: "space-between",
               }}
             >
-              <h1>{selectedProject}'s Notes</h1>
-              <Popover
-                content={popoverContentNote}
-                title="Add New Note"
-                trigger="click"
-              >
-                <PlusSquareOutlined
-                  style={{
-                    fontSize: "20px",
-                    cursor: "pointer",
-                    marginRight: "30px",
-                  }}
-                />
-              </Popover>
+              {projectTitles.length > 0 ? (
+                <>
+                  <h1>{selectedProject}'s Notes</h1>
+                  <Popover
+                    content={popoverContentNote}
+                    title="Add New Note"
+                    trigger="click"
+                  >
+                    <PlusSquareOutlined
+                      style={{
+                        fontSize: "20px",
+                        cursor: "pointer",
+                        marginRight: "30px",
+                      }}
+                    />
+                  </Popover>
+                </>
+              ) : (
+                <h1>No projects, create one</h1>
+              )}
+
             </div>
             <div className="notes-list">
               {notes.length > 0 ? (
@@ -354,7 +365,6 @@ function NotesPage() {
                 <div>No notes available</div>
               )}
             </div>
-
           </div>
           <MindMap
             nodeDataArray={nodeDataArray}

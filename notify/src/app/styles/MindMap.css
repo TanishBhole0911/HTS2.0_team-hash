@@ -2,6 +2,7 @@
 
 .mindmap-section {
   cursor: pointer;
+  width: 100%;
 }
 
 .mindmap-section h2 {
@@ -13,5 +14,5 @@
 
 .diagram-component {
   width: 100%;
-  height: 400px;
+  height: 100vh;
 }

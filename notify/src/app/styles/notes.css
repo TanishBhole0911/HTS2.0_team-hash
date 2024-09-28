@@ -10,6 +10,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
 }
 
 .top-section {
@@ -17,11 +18,18 @@ body {
   width: 100%;
 }
 
+.notes-main-container {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
 .notes-content {
   display: flex;
   gap: 20px;
   flex: 1;
   transition: all 0.3s ease-in-out;
+  margin-left: 10%;
 }
 
 .notes-content.panel-closed .notes-main {
@@ -31,7 +39,8 @@ body {
 .notes-content.panel-open .notes-main {
   flex: 0 0 72%;
 }
-.search-container{
+
+.search-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -51,7 +60,8 @@ body {
   background-color: #f4f5f7;
   animation: fadeIn 1s ease-in-out;
   margin-left: 1%;
-  width: 50%;
+  width: 80%;
+  overflow-y: auto;
 }
 
 .notes-main h1 {
@@ -59,7 +69,6 @@ body {
   font-weight: 600;
   color: #333;
 }
-
 .note-card {
   background-color: #fff;
   padding: 20px;
@@ -67,6 +76,7 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s, box-shadow 0.3s;
 }
+
 .note-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -93,11 +103,13 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .notes-content {
   display: flex;
   flex: 1;
@@ -112,6 +124,7 @@ body {
 .notes-content.panel-open .notes-main {
   flex: 0 0 72%;
 }
+
 .notes-page {
   display: flex;
   flex-direction: row;
@@ -122,12 +135,14 @@ body {
   align-items: center;
   background-color: #ffffff;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
   gap: 10px;
   border-right: 1px solid #ddd;
+  position: fixed;
 }
+
 .notes-panel-logo {
   display: flex;
   justify-content: center;
@@ -138,19 +153,22 @@ body {
   flex-direction: column;
   gap: 10px;
 }
-.notes-panel-content{
+
+.notes-panel-content {
   display: flex;
   flex-direction: column;
-  margin-top:20%;
+  margin-top: 20%;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
-.note-item-container{
+
+.note-item-container {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
 .note-item {
   display: flex;
   align-items: center;
@@ -160,7 +178,8 @@ body {
   cursor: pointer;
   gap: 10px;
 }
-.note-item-container{
+
+.note-item-container {
   margin-top: 20px;
   margin-bottom: 20px;
 }
