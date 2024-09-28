@@ -8,7 +8,7 @@ from routes.mindmap import router as mindmap_router
 from routes.get_user import router as get_user_router
 from routes.get_notes import router as get_notes_router
 from routes.flash_cards import router as flash_cards_router
-from routes.converse import router as converse_router
+
 from routes.proxy import router as proxy_router
 from routes.chatbot import router as chatbot_router
 
@@ -32,7 +32,7 @@ app.include_router(
 )  # Include the new chatbot router
 app.include_router(register_router, prefix="/register", tags=["Register"])
 app.include_router(get_user_router, prefix="/get_user", tags=["Get User"])
-app.include_router(converse_router, prefix="/converse", tags=["Converse"])
+
 app.include_router(get_notes_router, prefix="/get_notes", tags=["Get Notes"])
 app.include_router(flash_cards_router, prefix="/flashcards", tags=["Flashcards"])
 
