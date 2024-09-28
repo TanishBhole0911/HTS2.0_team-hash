@@ -25,13 +25,16 @@ const Signup: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_FETCH_API}/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, email, password }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -47,7 +50,7 @@ const Signup: React.FC = () => {
       if (error instanceof Error) {
         setError(
           error.message ||
-          "Failed to sign up. Please check your details and try again."
+            "Failed to sign up. Please check your details and try again."
         );
       } else {
         setError("Failed to sign up. Please check your details and try again.");
