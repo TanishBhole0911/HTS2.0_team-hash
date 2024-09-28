@@ -101,7 +101,7 @@ Notify is a next-generation note-taking application designed to enhance producti
 
 10. **Test Backend:**
 
-    open Postman and join `https://app.getpostman.com/join-team?invite_code=f15603a1f80ac6623d3741dae5f4bf73&target_code=1ddf445a8cc87ea74e3256fd61272a27`
+    open Postman and join 'https://app.getpostman.com/join-team?invite_code=f15603a1f80ac6623d3741dae5f4bf73&target_code=db4238a52b083f92191f73390963c716'
 
 ## 📚 Usage
 
