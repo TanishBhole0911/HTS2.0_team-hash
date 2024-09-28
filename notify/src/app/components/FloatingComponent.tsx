@@ -41,7 +41,7 @@ export function Floating() {
                 icon: (
                     <IconBrandX className="h-full w-full text-neutral-500 dark:text-neutral-300" />
                 ),
-                href: "#",
+                href: "https://twitter.com/HackTheSpace_",
             },
             {
                 title: "GitHub",
