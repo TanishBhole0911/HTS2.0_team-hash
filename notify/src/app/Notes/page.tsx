@@ -6,13 +6,14 @@ import Icon, { BookOutlined, UserOutlined } from "@ant-design/icons";
 import Image from "next/image";
 import openBook from "../assets/open-book.png";
 import { Popover, Button, FloatButton, Modal, Input } from "antd";
-import { SearchOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { SearchOutlined, PlusCircleOutlined, WechatWorkOutlined } from "@ant-design/icons";
 import { Tooltip, IconButton } from "@mui/material";
 import { setUser } from "../../features/User/user-slice";
 import { useDispatch, useSelector } from "react-redux";
 import { PlusSquareOutlined } from "@ant-design/icons";
 import MindMap from "../components/MindMap"; // Import the MindMap component
-
+import FlashCard from "../components/flashCard"; // Import the Flashcards component
+import Flash from "../assets/flash.png";
 type Note = {
   note_title: string;
   page_number: number;
@@ -45,6 +46,7 @@ function NotesPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState<{ message: string, sender: string }[]>([]);
   const [newMessage, setNewMessage] = useState("");
+  const [isFlashcardsOpen, setIsFlashcardsOpen] = useState(false); // New state for Flashcards
 
   const handleAddNotes = useCallback(async () => {
     if (newNoteTitle) {
@@ -198,6 +200,40 @@ function NotesPage() {
         `${process.env.NEXT_PUBLIC_API_FETCH_API}/mindmap`,
         requestOptions
       );
+      if (response.status === 500) {
+        throw new Error("Internal Server Error");
+      }
+      const data = await response.json();
+      console.log(data);
+      setNodeDataArray(data.data.nodeDataArray);
+      setLinkDataArray(data.data.linkDataArray);
+    } catch (error) {
+      console.log("error", error);
+      setNodeDataArray([]);
+      setLinkDataArray([]);
+    }
+  }, [username, selectedProject]);
+  const fetchRefreshMindMapData = useCallback(async () => {
+    const myHeaders = new Headers({ "Content-Type": "application/json" });
+    const raw = JSON.stringify({
+      username,
+      project_title: selectedProject,
+      refresh: true,
+    });
+    console.log(username, selectedProject);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow" as RequestRedirect,
+    };
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_FETCH_API}/mindmap`,
+        requestOptions
+      );
       const data = await response.json();
       console.log(data);
       setNodeDataArray(data.data.nodeDataArray);
@@ -206,7 +242,6 @@ function NotesPage() {
       console.log("error", error);
     }
   }, [username, selectedProject]);
-
   const handleSendMessage = async () => {
     if (newMessage.trim()) {
       const myHeaders = new Headers({ "Content-Type": "application/json" });
@@ -231,6 +266,10 @@ function NotesPage() {
         console.log("error", error);
       }
     }
+  };
+
+  const handleOpenFlashcards = () => {
+    setIsFlashcardsOpen(true);
   };
 
   useEffect(() => {
@@ -366,12 +405,39 @@ function NotesPage() {
               )}
             </div>
           </div>
-          <MindMap
-            nodeDataArray={nodeDataArray}
-            linkDataArray={linkDataArray}
-          />
+          {nodeDataArray.length > 0 && linkDataArray.length > 0 ? (
+            <MindMap
+              nodeDataArray={nodeDataArray}
+              linkDataArray={linkDataArray}
+            />
+          ) : (
+            <div>No mindmap available</div>
+          )}
+          <Button
+            type="primary"
+            onClick={fetchRefreshMindMapData}
+            style={{ marginTop: 16 }}
+          >
+            Generate MindMap
+          </Button>
           <FloatButton
-            icon={<PlusCircleOutlined />}
+            icon={<Image style={{ color: "white" }} width={30} height={30} src={Flash} alt="Flashcards" />}
+            type="primary"
+            style={{ right: 24, bottom: 80 }} // Adjusted position to avoid overlap
+            onClick={handleOpenFlashcards}
+          />
+          <Modal
+            title="Flashcards"
+            visible={isFlashcardsOpen}
+            onCancel={() => setIsFlashcardsOpen(false)}
+            footer={null}
+            width={1000}
+            style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+          >
+            <FlashCard projectTitle={selectedProject || ""} />
+          </Modal>
+          <FloatButton
+            icon={<WechatWorkOutlined />}
             type="primary"
             style={{ right: 24, bottom: 24 }}
             onClick={() => setIsChatOpen(true)}
@@ -382,6 +448,7 @@ function NotesPage() {
             onCancel={() => setIsChatOpen(false)}
             footer={null}
             width={600}
+            style={{ marginLeft: "auto", marginRight: "auto" }}
           >
             <div className="chat-container">
               <div className="chat-messages" style={{ maxHeight: '60vh', overflowY: 'auto' }}>

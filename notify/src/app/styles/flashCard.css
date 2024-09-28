@@ -1,12 +1,14 @@
 /* flashCard.css */
 .flash-card {
-  width: 200px;
+  width: 100%; /* Ensure cards take full width of grid cell */
   height: 200px; /* Make the card square */
   perspective: 1000px;
+  margin: 0; /* Remove margin to fit grid gap */
   cursor: pointer;
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   transition: transform 0.6s, box-shadow 0.3s;
+  box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
 .flash-card:hover {
@@ -54,10 +56,12 @@
   border: 1px solid #ddd;
 }
 
-.flashcard-container {
-  display: flex;
-  gap: 20px; /* Space between the cards */
+.flash-card-container {
+  display: grid; /* Use grid layout */
+  grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
+  gap: 20px; /* Adjust gap between cards as needed */
   justify-content: center; /* Center the cards horizontally */
+  width: 100%; /* Adjusted to take full width */
   align-items: center; /* Center the cards vertically */
   margin-top: 20px; /* Space above the cards */
   padding: 20px;

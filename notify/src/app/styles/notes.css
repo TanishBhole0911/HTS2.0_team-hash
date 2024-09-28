@@ -63,7 +63,9 @@ body {
   width: 80%;
   overflow-y: auto;
 }
-
+.ant-modal-content {
+  width: 1000px !important;
+}
 .notes-main h1 {
   font-size: 28px;
   font-weight: 600;

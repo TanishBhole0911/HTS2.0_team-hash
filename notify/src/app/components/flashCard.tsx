@@ -1,47 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/flashCard.css"; // Import the CSS file for styling
 
 interface FlashCardProps {
-  question: string;
-  answer: string;
-  flipCount: number;
-  onClick: () => void;
-  quizMode: boolean;
-  userAnswer: string;
-  onAnswerChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  projectTitle: string;
 }
 
-const FlashCard: React.FC<FlashCardProps> = ({
-  question,
-  answer,
-  flipCount,
-  onClick,
-  quizMode,
-  userAnswer,
-  onAnswerChange,
-}) => {
+interface FlashCardData {
+  question: string;
+  answer: string;
+  flipped: boolean; // Add flipped property
+}
+
+const FlashCard: React.FC<FlashCardProps> = ({ projectTitle }) => {
+  const [flashCards, setFlashCards] = useState<FlashCardData[]>([]);
+
+  useEffect(() => {
+    const fetchFlashCards = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/flashcards", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: "jayesh1",
+            project_title: projectTitle,
+          }),
+        });
+        const data = await response.json();
+        // Initialize flipped property to false for each card
+        const initializedData = data.data.map((card: FlashCardData) => ({
+          ...card,
+          flipped: false,
+        }));
+        setFlashCards(initializedData);
+      } catch (error) {
+        console.error("Error fetching flashcards:", error);
+      }
+    };
+
+    fetchFlashCards();
+  }, [projectTitle]);
+
+  const handleCardClick = (index: number) => {
+    setFlashCards((prevCards) =>
+      prevCards.map((card, i) =>
+        i === index ? { ...card, flipped: !card.flipped } : card
+      )
+    );
+  };
+
   return (
-    <div className="flash-card" onClick={onClick}>
-      <div
-        className="flash-card-inner"
-        style={{ transform: `rotateY(${flipCount % 2 === 0 ? 0 : 180}deg)` }}
-      >
-        <div className="flash-card-front">
-          <p>{question}</p>
+    <div className="flash-card-container">
+      {flashCards.map((flashCard, index) => (
+        <div
+          key={index}
+          className="flash-card"
+          onClick={() => handleCardClick(index)}
+        >
+          <div
+            className="flash-card-inner"
+            style={{ transform: `rotateY(${flashCard.flipped ? 180 : 0}deg)` }}
+          >
+            <div className="flash-card-front">
+              <p>{flashCard.question}</p>
+            </div>
+            <div className="flash-card-back">
+              <p>{flashCard.answer}</p>
+            </div>
+          </div>
         </div>
-        <div className="flash-card-back">
-          {quizMode ? (
-            <input
-              type="text"
-              value={userAnswer}
-              onChange={onAnswerChange}
-              className="answer-textarea"
-            />
-          ) : (
-            <p>{answer}</p>
-          )}
-        </div>
-      </div>
+      ))}
     </div>
   );
 };
