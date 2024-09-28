@@ -8,6 +8,7 @@ import { useRef } from "react";
 import "../../../../styles/editNotes.css"
 import { Button } from 'antd'; // Import Button from antd
 import { message } from 'antd'; // Import message from antd
+import Browser from "../../../../components/Browser";
 export default function EditNotes() {
 	const { projectTitle, noteTitle, PageNumber } = useParams(); // Get projectTitle and noteTitle from params
 	// Use useSelector to get values from Redux store
@@ -100,50 +101,52 @@ export default function EditNotes() {
 	};
 
 	return (
-		<div className="edit-notes-container">
-
-
-			<form onSubmit={handleSubmit}>
-				<div className="edit-notes-title">
-					<label className="edit-notes-title-label">
-						Note Title:
-						<input
-							className="edit-notes-title-input"
-							type="text"
-							value={noteTitleState}
-							required
-						/>
-					</label>
-				</div>
-				<Editor
-					apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
-					key={editorContent} // Add key prop to force re-render
-					onInit={(_evt, editor) => editorRef.current = editor}
-					init={{
-						plugins: [
-							// Core editing features
-							'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-							// Your account includes a free trial of TinyMCE premium features
-							// Try the most popular premium features until Oct 8, 2024:
-							'autocorrect', 'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown',
-						],
-						toolbar:
-							"undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
-						tinycomments_mode: "embedded",
-						tinycomments_author: "Author name",
-						mergetags_list: [
-							{ value: "First.Name", title: "First Name" },
-							{ value: "Email", title: "Email" },
-						],
-						ai_request: (request: any, respondWith: any) =>
-							respondWith.string(() =>
-								Promise.reject("See docs to implement AI Assistant")
-							),
-					}}
-					initialValue={editorContent} // Set initialValue to editorContent
-				/>
-				<Button type="primary" htmlType="submit">Save Content</Button>
-			</form>
-		</div>
+		<>
+			<div className="edit-notes-container">
+				<form onSubmit={handleSubmit} className="edit-notes-form">
+					<div className="edit-notes-title">
+						<label className="edit-notes-title-label">
+							Note Title:
+							<input
+								className="edit-notes-title-input"
+								type="text"
+								value={noteTitleState}
+								required
+							/>
+						</label>
+					</div>
+					<Editor
+						id="edit-notes-editor"
+						apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
+						key={editorContent} // Add key prop to force re-render
+						onInit={(_evt, editor) => editorRef.current = editor}
+						init={{
+							plugins: [
+								// Core editing features
+								'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+								// Your account includes a free trial of TinyMCE premium features
+								// Try the most popular premium features until Oct 8, 2024:
+								'autocorrect', 'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown',
+							],
+							toolbar:
+								"undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat",
+							tinycomments_mode: "embedded",
+							tinycomments_author: "Author name",
+							mergetags_list: [
+								{ value: "First.Name", title: "First Name" },
+								{ value: "Email", title: "Email" },
+							],
+							ai_request: (request: any, respondWith: any) =>
+								respondWith.string(() =>
+									Promise.reject("See docs to implement AI Assistant")
+								),
+						}}
+						initialValue={editorContent} // Set initialValue to editorContent
+					/>
+					<Button type="primary" htmlType="submit">Save Content</Button>
+				</form>
+				<Browser />
+			</div>
+		</>
 	);
 }

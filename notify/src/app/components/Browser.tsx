@@ -37,6 +37,9 @@ const Browser: React.FC = () => {
 
     return (
         <div>
+            <div className="iframe-container">
+                <iframe src={iframeSrc} />
+            </div>
             <div className="search-container">
                 <input
                     type="text"
@@ -64,25 +67,13 @@ const Browser: React.FC = () => {
                     </div>
                 ))}
             </div>
-            <div className="iframe-container">
-                <iframe src={iframeSrc} />
-                <div className="overlay"></div>
-            </div>
             <style jsx>{`
-                body {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    height: 100vh;
-                    background-color: #f5f5f5;
-                    font-family: Arial, sans-serif;
-                }
                 .search-container {
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     margin-bottom: 20px;
+                    z-index: 1001;
                 }
                 .search-input {
                     width: 400px;
@@ -103,6 +94,7 @@ const Browser: React.FC = () => {
                 }
                 .results-container {
                     width: 80%;
+                    display: block;
                     margin-bottom: 20px;
                 }
                 .result-item {
@@ -112,12 +104,12 @@ const Browser: React.FC = () => {
                     text-decoration: underline;
                 }
                 .iframe-container {
-                    position: absolute;
+                    position: fixed; /* Changed from absolute to fixed */
                     top: 50%;
-                    right: 10%;
-                    transform: translateY(-50%);
+                    left: 80%;
+                    transform: translate(-50%, -50%);
                     width: 375px; /* Width of a typical phone screen */
-                    height: 667px; /* Height of a typical phone screen */
+                    height: 80%; /* Height of a typical phone screen */
                     border: 1px solid #ddd;
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                     overflow: hidden;
@@ -126,16 +118,6 @@ const Browser: React.FC = () => {
                     width: 100%;
                     height: 100%;
                     pointer-events: auto; /* Allow scrolling */
-                }
-                .overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: transparent;
-                    z-index: 1;
-                    pointer-events: none; /* Allow scrolling */
                 }
             `}</style>
         </div>
