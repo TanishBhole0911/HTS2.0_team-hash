@@ -140,6 +140,9 @@ We welcome contributions! Here's how you can get involved:
 
 Happy learning with Notify! 🎓
 
+
+ayush was here
+
 _This project was developed by **Team Hash** for **Hack The Space 2.0**._
 
 ---
