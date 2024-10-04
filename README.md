@@ -138,6 +138,15 @@ We welcome contributions! Here's how you can get involved:
 
 ---
 
+
+UMANG <241B33>
+.
+.
+MOON IS NOT WHITE
+>
+>
+PEACE
+
 Happy learning with Notify! 🎓
 
 _This project was developed by **Team Hash** for **Hack The Space 2.0**._
