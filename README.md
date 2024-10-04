@@ -142,5 +142,5 @@ Happy learning with Notify! 🎓
 
 _This project was developed by **Team Hash** for **Hack The Space 2.0**._
 
----( I  love Mozila ..name- praveen pandey Enr No.- 241B190)
+---( I  love Mozila ..name- praveen pandey Enr No.- 241B190) 
 
