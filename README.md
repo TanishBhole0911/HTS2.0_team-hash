@@ -143,3 +143,5 @@ Happy learning with Notify! 🎓
 _This project was developed by **Team Hash** for **Hack The Space 2.0**._
 
 ---
+Ashutosh Choubey (MOZILLA PHOENIX CLUB'S SENIORS ARE DAMN HANDSOME, CONFIDENT AND TALENTED AS WELL) 241B612
+
