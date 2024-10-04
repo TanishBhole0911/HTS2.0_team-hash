@@ -143,4 +143,4 @@ Happy learning with Notify! 🎓
 _This project was developed by **Team Hash** for **Hack The Space 2.0**._
 
 ---
-KHUSHI SHARMA [a good start of our journey.(^.^)] 241B327
+KHUSHI SHARMA [a good start of our journey..(^.^)] 241B327
