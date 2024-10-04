@@ -144,4 +144,4 @@ _This project was developed by **Team Hash** for **Hack The Space 2.0**._
 
 ---
 
-YASHASVI TRIPATHI [dhamalastik] 241B296
+YASHASVI TRIPATHI [dhamalastik event] 241B296
