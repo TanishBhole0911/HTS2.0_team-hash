@@ -140,6 +140,10 @@ We welcome contributions! Here's how you can get involved:
 
 Happy learning with Notify! 🎓
 
-_This project was developed by **Team Hash** for **Hack The Space 2.0**._
-
+_This project was developed by **Team Hash** for **Hack The Space 2.0
+Chitransh Gupta[Stickers de do sir please]241B637
+alok tiwari[ we need stickers] 241b639
 ---
+nayan raj [event was like sixth finger to hritik roshan ] 241b704
+pranav[]241b184
+
