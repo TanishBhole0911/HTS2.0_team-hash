@@ -137,6 +137,7 @@ We welcome contributions! Here's how you can get involved:
 - Integration with other learning platforms (e.g., Google Scholar, Wikipedia)
 
 ---
+AKSHAY SINGH (EXCITED) 241B604
 
 Happy learning with Notify! 🎓
 
