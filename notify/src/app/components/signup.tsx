@@ -25,7 +25,7 @@ const Signup: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_FETCH_API}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
