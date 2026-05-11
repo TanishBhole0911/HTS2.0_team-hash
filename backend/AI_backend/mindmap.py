@@ -40,7 +40,7 @@ def generate_mindmap(text: str) -> str:
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": prompt},
                 ],
-                model="llama3-8b-8192",
+                model="llama-3.1-8b-instant",
             )
         except Exception as e:
             print(f"Error: {str(e)}")  # Debugging line

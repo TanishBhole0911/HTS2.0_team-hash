@@ -71,7 +71,7 @@ async def chat(request: ChatRequest) -> Dict[str, Any]:
                 "content": f"Hi, I am preparing for my {project_title} exam. These are my current notes:\n{content}. Can you help me with following quetion? {user_message} Only answer from within the notes.",
             },
         ],
-        model="llama3-8b-8192",
+        model="llama-3.1-8b-instant",
     )
     bot_response = chat_completion.choices[0].message.content.strip()
 

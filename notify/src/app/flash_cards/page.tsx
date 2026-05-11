@@ -3,7 +3,6 @@ import "../styles/flashCard.css"; // Import the CSS file for styling
 import React, { useState, useEffect } from "react";
 import FlashCard from "../components/flashCard"; // Import the FlashCard component
 
-
 export default function FlashCardPage() {
   const [flipCounts, setFlipCounts] = useState<number[]>([0, 0, 0]);
   const [flippedCardIndex, setFlippedCardIndex] = useState<number | null>(null);
@@ -11,12 +10,7 @@ export default function FlashCardPage() {
   const [shouldFlipAll, setShouldFlipAll] = useState<boolean>(false);
   const [answers, setAnswers] = useState<string[]>(["", "", ""]);
   const [score, setScore] = useState<number | null>(null);
-  const [s3BucketUrl, setS3BucketUrl] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState<boolean>(false);
-
-  useEffect(() => {
-    setS3BucketUrl(process.env.S3_BUCKET_URL || null);
-  }, []);
 
   const handleCardClick = (index: number) => {
     if (quizMode) return; // Do nothing in quiz mode

@@ -41,7 +41,7 @@ def generate_flashcards(text: str) -> List[Dict[str, str]]:
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": prompt},
                 ],
-                model="llama3-8b-8192",
+                model="llama-3.1-8b-instant",
             )
         except Exception as e:
             print(f"Error: {str(e)}")  # Debugging line
