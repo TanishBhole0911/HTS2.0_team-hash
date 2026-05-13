@@ -1,123 +1,126 @@
-/* flashCard.css */
-.flash-card {
-  width: 100%; /* Ensure cards take full width of grid cell */
-  height: 200px; /* Make the card square */
+.fc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0 8px;
+}
+
+.fc-hint {
+  font-size: 13px;
+  color: #9ca3af;
+  text-align: center;
+  margin: 0;
+}
+
+.fc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* ── Card shell ── */
+.fc-card {
+  height: 200px;
   perspective: 1000px;
-  margin: 0; /* Remove margin to fit grid gap */
   cursor: pointer;
-  border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transition: transform 0.6s, box-shadow 0.3s;
-  box-sizing: border-box; /* Ensure padding and border are included in the width */
 }
 
-.flash-card:hover {
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.4);
-  transform: scale(1.05);
-}
-
-.flash-card-inner {
+.fc-card-inner {
   position: relative;
   width: 100%;
   height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
   transform-style: preserve-3d;
-  border-radius: 15px;
-  background-color: transparent; /* Set background to transparent */
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 14px;
 }
 
-.flash-card-front,
-.flash-card-back {
+.fc-card--flipped .fc-card-inner {
+  transform: rotateY(180deg);
+}
+
+.fc-card-front,
+.fc-card-back {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  border-radius: 14px;
   backface-visibility: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between; /* Ensure space between elements */
-  font-size: 1.5em;
+  justify-content: center;
   padding: 20px;
-  box-sizing: border-box;
-  border-radius: 15px;
+  gap: 10px;
+  text-align: center;
 }
 
-.flash-card-front {
-  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-  color: #000;
-  border: 1px solid #ddd;
+/* Front: indigo gradient */
+.fc-card-front {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
 }
 
-.flash-card-back {
-  background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+.fc-card-front p {
   color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Back: soft purple */
+.fc-card-back {
+  background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
   transform: rotateY(180deg);
-  border: 1px solid #ddd;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.15);
 }
 
-.flash-card-container {
-  display: grid; /* Use grid layout */
-  grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
-  gap: 20px; /* Adjust gap between cards as needed */
-  justify-content: center; /* Center the cards horizontally */
-  width: 100%; /* Adjusted to take full width */
-  align-items: center; /* Center the cards vertically */
-  margin-top: 20px; /* Space above the cards */
-  padding: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+.fc-card-back p {
+  color: #3730a3;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
 }
 
-.flashcard-wrapper {
-  position: relative;
+.fc-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.fc-card-front .fc-card-label { color: #c7d2fe; }
+.fc-card-back  .fc-card-label { color: #7c3aed; }
+
+/* Hover lift */
+.fc-card:hover .fc-card-inner {
+  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.25);
+}
+
+/* ── States ── */
+.fc-state {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 20px;
+  color: #9ca3af;
+  font-size: 14px;
 }
 
-.answer-textarea {
-  width: 90%; /* Make the text area fit within the card */
-  height: 40px; /* Set a fixed height for the text area */
-  padding: 5px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  font-size: 1em;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  resize: none; /* Disable resizing */
-  margin-top: 10px; /* Add some space above the text area */
-  background-color: #fff; /* White background for better readability */
-  color: #333; /* Dark text color for better readability */
-  overflow: hidden; /* Remove scrollbar */
+.fc-error { color: #ef4444; }
+
+.fc-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e0e7ff;
+  border-top-color: #6366f1;
+  border-radius: 50%;
+  animation: fc-spin 0.75s linear infinite;
 }
 
-.toggle-mode-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.submit-button {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.score-display {
-  margin-top: 20px;
-  font-size: 1.5em;
-  font-weight: bold;
+@keyframes fc-spin {
+  to { transform: rotate(360deg); }
 }

@@ -1,13 +1,13 @@
 import json
 import os
+import re
+import asyncio
 from fastapi import HTTPException, APIRouter
 from pydantic import BaseModel
 from models import FlashcardRequest
 from typing import List, Dict, Any
 from dotenv import load_dotenv
 from groq import Groq
-import networkx as nx
-import matplotlib.pyplot as plt
 from database import (
     user_collection,
     note_collection,
@@ -31,8 +31,14 @@ def process_text(text: str) -> str:
 
 
 def generate_flashcards(text: str) -> List[Dict[str, str]]:
-    system_prompt = f"You are an helpful guide which specializes in generation of question and answer from context given to you. You are given a text and you have to generate a list of important questions and answers which is only from from within the given text (Do not put anything from outside the given context) in JSON format."
-    prompt = f"Generate a list of important questions and answers in JSON format from the following text: {text}. Remember to generate questions with one word answers only and make the answers one word."
+    # Truncate to ~2000 chars to stay within Groq free-tier TPM limits
+    truncated = text[:2000]
+    system_prompt = (
+        "You are a flashcard generator. Return ONLY a JSON array with no explanation. "
+        "Each element must have exactly two keys: \"question\" and \"answer\". "
+        "Example: [{\"question\": \"Who is Harry?\", \"answer\": \"A wizard\"}]"
+    )
+    prompt = f"Generate 8 flashcards as a JSON array from this text:\n\n{truncated}"
     max_attempts = 8
     for attempt in range(max_attempts):
         try:
@@ -50,23 +56,24 @@ def generate_flashcards(text: str) -> List[Dict[str, str]]:
             )
 
         result = chat_completion.choices[0].message.content
-        start_index = result.find("```") + len("```")
-        end_index = result.rfind("```")
-        cleaned_result = result[start_index:end_index].strip()
+
+        # Extract JSON from ```json ... ``` block, or fall back to raw [...] / {...}
+        code_block = re.search(r'```(?:json)?\s*([\s\S]*?)```', result)
+        if code_block:
+            cleaned_result = code_block.group(1).strip()
+        else:
+            raw_match = re.search(r'[\[{][\s\S]*[\]}]', result)
+            cleaned_result = raw_match.group(0).strip() if raw_match else result.strip()
+
         cleaned_result = cleaned_result.replace('\\"', '"')
-        cleaned_result = cleaned_result.replace("\n", "")
-        # print(cleaned_result)
-        # print("----")
+
         try:
             flashcards = json.loads(cleaned_result)
-            # print(flashcards)
-            if not flashcards[0]["question"]:
-                raise json.JSONDecodeError(
-                    "Expecting value", "line 1 column 1 (char 0)", 0
-                )
-            return flashcards  # Return if valid JSON
-        except json.JSONDecodeError:
-            print(f"Attempt {attempt + 1} failed: Invalid JSON content")
+            if not flashcards[0].get("question"):
+                raise json.JSONDecodeError("Missing question key", "", 0)
+            return flashcards
+        except (json.JSONDecodeError, IndexError, KeyError):
+            print(f"Attempt {attempt + 1} failed: Invalid JSON content\nRaw: {result[:200]}")
 
     # If all attempts fail, raise an HTTP exception
     raise HTTPException(
@@ -102,9 +109,9 @@ async def create_flashcards(request: FlashcardRequest) -> Dict[str, Any]:
         # Concatenate all page contents
         content = " ".join(page["content"] for page in note.get("pages", []))
 
-        # Process and generate flashcards
+        # Run sync Groq calls in a thread so the event loop stays free
         processed_text = process_text(content)
-        flashcards = generate_flashcards(processed_text)
+        flashcards = await asyncio.to_thread(generate_flashcards, processed_text)
 
         # Upload the flashcards to the flashcard_collection in the database
         flashcard_data = {

@@ -2,153 +2,172 @@
 import React, { useState, useEffect } from "react";
 import MDEditor from "@uiw/react-md-editor";
 import { useSelector } from "react-redux";
-import { useParams } from "next/navigation"; // Import useParams
+import { useParams, useRouter } from "next/navigation";
 import "../../../../styles/editNotes.css";
-import { Button } from "antd"; // Import Button from antd
-import { message } from "antd"; // Import message from antd
-import { Resizable } from "re-resizable";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import { message } from "antd";
 
-const helpCommand = {
-  name: "help",
-  keyCommand: "help",
-  buttonProps: { "aria-label": "Insert help" },
-  icon: (
-    <span title="Help">
-      <FontAwesomeIcon icon={faQuestionCircle} />
-    </span>
-  ),
-  execute: (state: any, api: any) => {
-    // Open a help modal or link to documentation
-    window.open("https://www.markdownguide.org/basic-syntax/", "_blank");
-  },
-};
 export default function EditNotes() {
-  const { projectTitle, noteTitle, PageNumber } = useParams(); // Get projectTitle and noteTitle from params
-  // Use useSelector to get values from Redux store
+  const router = useRouter();
+  const { projectTitle, noteTitle, PageNumber } = useParams();
   const cachedUsername = useSelector((state: any) => state.user.user.username);
 
-  // Initialize state without default values
   const [editorContent, setEditorContent] = useState<string>("");
   const [noteTitleState, setNoteTitleState] = useState<string>(
-    Array.isArray(decodeURIComponent(noteTitle as string))
-      ? decodeURIComponent(noteTitle as string)[0]
-      : decodeURIComponent(noteTitle as string),
+    Array.isArray(noteTitle)
+      ? decodeURIComponent(noteTitle[0])
+      : decodeURIComponent(noteTitle as string)
   );
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  const decodedProject = decodeURIComponent(projectTitle as string);
+  const decodedNote = decodeURIComponent(noteTitle as string);
+
   useEffect(() => {
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-
-    const decodedProjectTitle = decodeURIComponent(projectTitle as string);
-    const decodedNoteTitle = decodeURIComponent(noteTitle as string);
-    const raw = JSON.stringify({
-      username: cachedUsername,
-      project_title: decodedProjectTitle,
-    });
-
-    const requestOptions = {
+    const myHeaders = new Headers({ "Content-Type": "application/json" });
+    fetch(`${process.env.NEXT_PUBLIC_API_FETCH_API}/get_notes`, {
       method: "POST",
       headers: myHeaders,
-      body: raw,
-      redirect: "follow" as RequestRedirect,
-    };
-
-    fetch(`${process.env.NEXT_PUBLIC_API_FETCH_API}/get_notes`, requestOptions)
-      .then((response) => response.text())
-      .then((result) => {
-        const parsedResult = JSON.parse(result);
-        const correctNote = parsedResult.pages.find(
-          (page: any) =>
-            page.note_title === decodedNoteTitle &&
-            page.page_number === parseInt(PageNumber as string),
+      body: JSON.stringify({ username: cachedUsername, project_title: decodedProject }),
+      redirect: "follow",
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const note = data.pages.find(
+          (p: any) =>
+            p.note_title === decodedNote &&
+            p.page_number === parseInt(PageNumber as string)
         );
-        if (correctNote) {
-          setEditorContent(correctNote.content);
-          console.log(correctNote.content);
-        } else {
-          console.error("Note not found");
-        }
+        if (note) setEditorContent(note.content);
       })
-      .catch((error) => console.error(error));
-  }, [cachedUsername, projectTitle, noteTitle, PageNumber]);
-  useEffect(() => {
-    // Ensure username is available
-    if (!cachedUsername) {
-      console.error("Username is missing in the Redux store");
-    }
-    // Ensure project title is available
-    if (!projectTitle) {
-      console.error("Project title is missing in the params");
-    }
-  }, [cachedUsername, projectTitle]);
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log(editorContent);
+      .catch(console.error);
+  }, [cachedUsername, decodedProject, decodedNote, PageNumber]);
 
+  const handleSubmit = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    setSaving(true);
     try {
-      const decodedProjectTitle = decodeURIComponent(projectTitle as string);
-      const decodedNoteTitle = decodeURIComponent(noteTitle as string);
-      const noteSaveRequest = {
-        username: cachedUsername,
-        project_title: decodedProjectTitle,
-        pages: [
-          {
-            note_title: decodedNoteTitle,
-            page_number: parseInt(PageNumber as string),
-            content: editorContent,
-          },
-        ],
-      };
-
-      const saveResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_FETCH_API}/notes/save_note`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(noteSaveRequest),
-        },
-      );
-      if (!saveResponse.ok) {
-        throw new Error(`Failed to save content: ${saveResponse.statusText}`);
-      }
-      message.success("Note saved successfully");
-    } catch (error) {
-      console.error("Error:", error);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_FETCH_API}/notes/save_note`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: cachedUsername,
+          project_title: decodedProject,
+          pages: [
+            {
+              note_title: decodedNote,
+              page_number: parseInt(PageNumber as string),
+              content: editorContent,
+            },
+          ],
+        }),
+      });
+      if (!res.ok) throw new Error(res.statusText);
+      message.success("Note saved");
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      message.error("Failed to save");
+      console.error(err);
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
-    <>
-      <div className="edit-notes-container" data-color-mode="light">
-        <form onSubmit={handleSubmit} className="edit-notes-form">
-          <div className="edit-notes-title">
-            <label className="edit-notes-title-label">Note Title</label>
-            <input
-              className="edit-notes-title-input"
-              type="text"
-              value={noteTitleState}
-              onChange={(e) => setNoteTitleState(e.target.value)}
-              required
-            />
-          </div>
+    <div className="edit-notes-container" data-color-mode="light">
+      {/* ── Top bar ── */}
+      <div className="edit-notes-topbar">
+        <button className="edit-notes-back-btn" onClick={() => router.push("/Notes")}>
+          <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
+            <path d="M19 12H5M12 5l-7 7 7 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+          Back
+        </button>
+
+        <div className="topbar-divider" />
+
+        <div className="edit-notes-breadcrumb">
+          <span className="crumb">{decodedProject}</span>
+          <span className="crumb-sep">/</span>
+          <span className="crumb-active">{noteTitleState}</span>
+        </div>
+
+        <div className="topbar-spacer" />
+
+        <button
+          className={`edit-notes-save-btn ${saved ? "saved" : ""}`}
+          onClick={handleSubmit}
+          disabled={saving}
+        >
+          {saved ? (
+            <>
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Saved
+            </>
+          ) : (
+            <>
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24">
+                <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="17 21 17 13 7 13 7 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <polyline points="7 3 7 8 15 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              {saving ? "Saving…" : "Save"}
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* ── Body ── */}
+      <form className="edit-notes-body" onSubmit={handleSubmit}>
+        {/* Title */}
+        <div className="edit-notes-title-wrapper">
+          <label className="edit-notes-title-label">Note Title</label>
+          <input
+            className="edit-notes-title-input"
+            type="text"
+            value={noteTitleState}
+            onChange={(e) => setNoteTitleState(e.target.value)}
+            placeholder="Untitled note..."
+            required
+          />
+        </div>
+
+        {/* Editor */}
+        <div className="edit-notes-editor-card">
           <MDEditor
             value={editorContent}
-            onChange={(value) => setEditorContent(value || "")}
-            height={800}
+            onChange={(v) => setEditorContent(v || "")}
+            height={560}
             preview="live"
           />
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ marginTop: "1.5rem" }}
-          >
-            Save Content
-          </Button>
-        </form>
-      </div>
-    </>
+        </div>
+
+        {/* Footer meta */}
+        <div className="edit-notes-meta">
+          <span className="meta-chip">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Page {PageNumber}
+          </span>
+          <span className="meta-chip">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            {editorContent.split(/\s+/).filter(Boolean).length} words
+          </span>
+          <span className="meta-chip">
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+              <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            {Math.max(1, Math.ceil(editorContent.split(/\s+/).filter(Boolean).length / 200))} min read
+          </span>
+        </div>
+      </form>
+    </div>
   );
 }

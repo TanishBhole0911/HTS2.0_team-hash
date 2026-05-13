@@ -1,5 +1,7 @@
 import json
 import os
+import re
+import asyncio
 from fastapi import HTTPException, APIRouter
 from pydantic import BaseModel
 from models import MindmapRequest
@@ -50,17 +52,23 @@ def generate_mindmap(text: str) -> str:
             )
 
         result = chat_completion.choices[0].message.content
-        start_index = result.find("```") + len("```")
-        end_index = result.rfind("```")
-        cleaned_result = result[start_index:end_index].strip()
+
+        # Try to extract JSON from a ```json ... ``` or ``` ... ``` block first
+        code_block = re.search(r'```(?:json)?\s*([\s\S]*?)```', result)
+        if code_block:
+            cleaned_result = code_block.group(1).strip()
+        else:
+            # Fall back to finding the outermost { ... } in the raw response
+            raw_match = re.search(r'\{[\s\S]*\}', result)
+            cleaned_result = raw_match.group(0).strip() if raw_match else result.strip()
+
         cleaned_result = cleaned_result.replace('\\"', '"')
-        cleaned_result = cleaned_result.replace("\n", "")
 
         try:
             json.loads(cleaned_result)
             return cleaned_result  # Return if valid JSON
         except json.JSONDecodeError:
-            print(f"Attempt {attempt + 1} failed: Invalid JSON content")
+            print(f"Attempt {attempt + 1} failed: Invalid JSON content\nRaw output: {result[:300]}")
 
     raise HTTPException(
         status_code=500, detail="Invalid JSON content in API response after 3 attempts"
@@ -70,13 +78,29 @@ def generate_mindmap(text: str) -> str:
 def convert_to_gojs_format(mindmap_content: str) -> Dict[str, Any]:
     try:
         mindmap_data = json.loads(mindmap_content)
+
+        def node_text(n):
+            return n.get("name") or n.get("label") or n.get("text") or n.get("id", "")
+
+        def node_category(n):
+            return n.get("type") or n.get("category") or "concept"
+
+        def edge_from(e):
+            return e.get("from") or e.get("source") or ""
+
+        def edge_to(e):
+            return e.get("to") or e.get("target") or ""
+
+        def edge_label(e):
+            return e.get("label") or e.get("relationship") or e.get("text") or ""
+
         gojs_data = {
             "nodeDataArray": [
-                {"key": node["id"], "category": node["type"], "text": node["name"]}
+                {"key": node["id"], "category": node_category(node), "text": node_text(node)}
                 for node in mindmap_data["nodes"]
             ],
             "linkDataArray": [
-                {"from": edge["from"], "to": edge["to"], "text": edge["label"]}
+                {"from": edge_from(edge), "to": edge_to(edge), "text": edge_label(edge)}
                 for edge in mindmap_data["edges"]
             ],
         }
@@ -120,9 +144,9 @@ async def create_mindmap(request: MindmapRequest) -> Dict[str, Any]:
         # Concatenate all page contents
         content = " ".join(page["content"] for page in note.get("pages", []))
 
-        # Process and generate mindmap
+        # Run sync Groq calls in a thread so the event loop stays free
         processed_text = process_text(content)
-        mindmap_content = generate_mindmap(processed_text)
+        mindmap_content = await asyncio.to_thread(generate_mindmap, processed_text)
 
         # Convert mindmap to GoJS format
         gojs_mindmap = convert_to_gojs_format(mindmap_content)
